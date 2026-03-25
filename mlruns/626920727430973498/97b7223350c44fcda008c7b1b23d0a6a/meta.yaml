@@ -1,0 +1,14 @@
+artifact_uri: file:E:/Year 4/Semester 2/Mlops/Assignment_5_MLOPs/mlruns/626920727430973498/97b7223350c44fcda008c7b1b23d0a6a/artifacts
+end_time: 1774439543761
+entry_point_name: ''
+experiment_id: '626920727430973498'
+lifecycle_stage: active
+run_id: 97b7223350c44fcda008c7b1b23d0a6a
+run_name: capricious-toad-582
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1774439543457
+status: 3
+tags: []
+user_id: HP
