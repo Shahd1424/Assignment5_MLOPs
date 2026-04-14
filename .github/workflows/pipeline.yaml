@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Linter
+        run: echo "Running linter..."
+
+
+  train:
+    needs: linter
+    runs-on: ubuntu-latest
+
+    if: >
+      github.ref == 'refs/heads/main' &&
+      contains(github.event.head_commit.message, '[run-train]')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Train Model
+        run: |
+          echo "Starting training..."
+          exit 1
+
+      - name: Create error log
+        if: failure()
+        run: echo "Training failed" > error_logs.txt
+
+      - name: Upload error log
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: error-logs
+          path: error_logs.txt
+
+      - name: Cleanup
+        if: always()
+        run: echo "Cleaning up temporary cloud volumes..."
