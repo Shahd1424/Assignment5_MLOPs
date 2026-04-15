@@ -1,0 +1,37 @@
+name: Assignment 6 Pipeline
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: echo "Linter passed"
+
+  train:
+    needs: linter
+    if: ${{ needs.linter.result == 'success' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[run-train]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: |
+          echo "Training..."
+          python -c "print('done')"
+
+      - if: ${{ failure() }}
+        run: echo "error" > error_logs.txt
+
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: error_logs.txt
+
+      - if: ${{ always() }}
+        run: echo "Cleaning up temporary cloud volumes..."
