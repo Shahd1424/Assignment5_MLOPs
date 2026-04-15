@@ -37,13 +37,13 @@ jobs:
           exit 1
 
       - name: Create error log
-        if: failure()
+        if: always()
         run: |
           echo "Training failed at $(date)" > error_logs.txt
-          echo "Exit code: $?" >> error_logs.txt
+          echo "Train job status: ${{ steps.train.outcome }}" >> error_logs.txt
 
       - name: Upload error log
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: error-logs
