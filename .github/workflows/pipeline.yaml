@@ -36,13 +36,17 @@ jobs:
           echo "Starting training..."
           exit 1
 
+      # ✅ ALWAYS CREATE LOG (حتى لو فشل)
       - name: Create error log
         if: always()
         run: |
-          echo "Train status: ${{ steps.train.outcome }}" > error_logs.txt
-          echo "Pipeline executed on main branch" >> error_logs.txt
-          echo "Run completed with logging step" >> error_logs.txt
+          echo "==== TRAIN REPORT ====" > error_logs.txt
+          echo "Train outcome: ${{ steps.train.outcome }}" >> error_logs.txt
+          echo "Commit: ${{ github.event.head_commit.message }}" >> error_logs.txt
+          echo "Branch: ${{ github.ref }}" >> error_logs.txt
+          echo "Status captured successfully" >> error_logs.txt
 
+      # ✅ ALWAYS UPLOAD ARTIFACT (مهم جدًا)
       - name: Upload error log
         if: always()
         uses: actions/upload-artifact@v3
@@ -50,6 +54,7 @@ jobs:
           name: error-logs
           path: error_logs.txt
 
+      # ✅ ALWAYS RUN CLEANUP
       - name: Cleanup
         if: always()
         run: echo "Cleaning up temporary cloud volumes..."
