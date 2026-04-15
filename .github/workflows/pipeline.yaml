@@ -39,8 +39,9 @@ jobs:
       - name: Create error log
         if: always()
         run: |
-          echo "Training failed at $(date)" > error_logs.txt
-          echo "Train job status: ${{ steps.train.outcome }}" >> error_logs.txt
+          echo "Train status: ${{ steps.train.outcome }}" > error_logs.txt
+          echo "Pipeline executed on main branch" >> error_logs.txt
+          echo "Run completed with logging step" >> error_logs.txt
 
       - name: Upload error log
         if: always()
