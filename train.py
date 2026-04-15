@@ -3,7 +3,7 @@ import mlflow.sklearn
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accurac_score
 import os
 
 mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
