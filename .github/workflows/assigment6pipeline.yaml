@@ -1,37 +1,51 @@
-name: Assignment 6 Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - '**'
+      - main
+  pull_request:
 
 jobs:
+
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - run: echo "Linter passed"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Linter
+        run: echo "Running linter..."
+
 
   train:
     needs: linter
-    if: ${{ needs.linter.result == 'success' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[run-train]') }}
     runs-on: ubuntu-latest
 
+    if: >
+      github.ref == 'refs/heads/main' &&
+      contains(github.event.head_commit.message, '[run-train]')
+
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - run: |
-          echo "Training..."
-          python -c "print('done')"
+      - name: Train Model
+        run: |
+          echo "Starting training..."
+          exit 1
 
-      - if: ${{ failure() }}
-        run: echo "error" > error_logs.txt
+      - name: Create error log
+        if: failure()
+        run: echo "Training failed" > error_logs.txt
 
-      - if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+      - name: Upload error log
+        if: failure()
+        uses: actions/upload-artifact@v3
         with:
-          name: logs
+          name: error-logs
           path: error_logs.txt
 
-      - if: ${{ always() }}
+      - name: Cleanup
+        if: always()
         run: echo "Cleaning up temporary cloud volumes..."
