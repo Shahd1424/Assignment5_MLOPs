@@ -31,13 +31,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Train Model
+        id: train
         run: |
           echo "Starting training..."
           exit 1
 
       - name: Create error log
         if: failure()
-        run: echo "Training failed" > error_logs.txt
+        run: |
+          echo "Training failed at $(date)" > error_logs.txt
+          echo "Exit code: $?" >> error_logs.txt
 
       - name: Upload error log
         if: failure()
